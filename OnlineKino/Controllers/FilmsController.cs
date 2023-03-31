@@ -1,17 +1,24 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace OnlineKino.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
-    public class FilmsController : Film
+    [Route("api/[controller]")]
+    public class FilmsController : ControllerBase
     {
         protected ApplicationContext _context = new ApplicationContext();
+        private readonly ILogger<WeatherForecastController> _logger;
+        public FilmsController(ILogger<WeatherForecastController> logger)
+        {
+            _logger = logger;
+        }
         [HttpGet]
         public List<Film> Get()
         {
+            _logger.LogInformation(_context.Films.ToList().Count.ToString());
             return _context.Films.ToList();
         }
         [HttpGet("{id}")]
@@ -45,7 +52,5 @@ namespace OnlineKino.Controllers
             _context.SaveChanges();
             return film;
         }
-
-
     }
 }
