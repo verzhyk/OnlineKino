@@ -10,16 +10,23 @@ namespace OnlineKino.Controllers
     public class FilmsController : ControllerBase
     {
         protected ApplicationContext _context = new ApplicationContext();
-        private readonly ILogger<WeatherForecastController> _logger;
-        public FilmsController(ILogger<WeatherForecastController> logger)
+        private readonly ILogger<FilmsController> _logger;
+        public FilmsController(ILogger<FilmsController> logger)
         {
             _logger = logger;
         }
         [HttpGet]
-        public List<Film> Get()
+        public List<Film> Get(string? title)
         {
-            _logger.LogInformation(_context.Films.ToList().Count.ToString());
-            return _context.Films.ToList();
+            _logger.LogInformation(title);
+            if (title == null)
+            {
+                return _context.Films.ToList();
+            }
+            else 
+            {
+                return _context.Films.Where(f => f.Name.ToLower().Contains(title.ToLower())).ToList();
+            }
         }
         [HttpGet("{id}")]
         public Film? Get(int id) 
